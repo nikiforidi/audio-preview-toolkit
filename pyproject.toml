@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "audio-preview-toolkit"
+version = "0.1.0"
+description = "A pure audio processing toolkit for generating smart previews (loudness analysis, trimming, crossfading)."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydub>=0.25.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.3.0"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
