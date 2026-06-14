@@ -1,4 +1,3 @@
-```markdown
 # 🎵 audio-preview-toolkit
 
 [![PyPI version](https://img.shields.io/pypi/v/audio-preview-toolkit.svg)](https://pypi.org/project/audio-preview-toolkit/)
@@ -145,4 +144,3 @@ This repository includes a `.devcontainer` configuration. If you use VS Code, si
 ## 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-```
