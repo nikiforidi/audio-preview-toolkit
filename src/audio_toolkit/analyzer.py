@@ -14,10 +14,10 @@ def find_loudest_segment(audio: AudioSegment, target_duration_ms: int) -> AudioS
     best_start = 0
 
     for i in range(0, len(audio) - target_duration_ms + 1, step_ms):
-        chunk = audio[i: i + target_duration_ms]
+        chunk = audio[i : i + target_duration_ms]
         rms = chunk.rms
         if rms > max_rms:
             max_rms = rms
             best_start = i
 
-    return audio[best_start: best_start + target_duration_ms]
+    return audio[best_start : best_start + target_duration_ms]

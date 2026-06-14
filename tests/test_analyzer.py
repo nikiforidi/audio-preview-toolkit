@@ -1,6 +1,5 @@
-import pytest
 from pydub import AudioSegment
-from pydub.generators import Sine, Silence
+from pydub.generators import Sine
 from audio_toolkit.analyzer import find_loudest_segment
 
 
@@ -24,7 +23,8 @@ def test_find_loudest_segment_finds_loud_burst():
     # 6-10s: Silent
     silent_1 = AudioSegment.silent(duration=3000)
     loud_burst = Sine(440).to_audio_segment(
-        duration=3000, volume=-3.0)  # -3 dBFS (loud)
+        duration=3000, volume=-3.0
+    )  # -3 dBFS (loud)
     silent_2 = AudioSegment.silent(duration=4000)
 
     audio = silent_1 + loud_burst + silent_2

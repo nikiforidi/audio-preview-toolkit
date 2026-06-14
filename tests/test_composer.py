@@ -13,8 +13,7 @@ def temp_audio_files():
     with tempfile.TemporaryDirectory() as tmp_dir:
         for i in range(3):
             # Create a 5-second audio file with a distinct tone
-            audio = Sine(440 + (i * 100)
-                         ).to_audio_segment(duration=5000, volume=-6.0)
+            audio = Sine(440 + (i * 100)).to_audio_segment(duration=5000, volume=-6.0)
             file_path = Path(tmp_dir) / f"track_{i}.mp3"
             audio.export(str(file_path), format="mp3")
             files.append(str(file_path))
@@ -34,7 +33,7 @@ async def test_generate_smart_preview_single_track(temp_audio_files):
             target_total_duration_ms=2000,
             max_tracks=1,
             crossfade_ms=0,  # No crossfade for single track
-            fade_in_out_ms=0
+            fade_in_out_ms=0,
         )
 
         assert Path(result_path).exists()
@@ -62,7 +61,7 @@ async def test_generate_smart_preview_multiple_tracks_with_crossfade(temp_audio_
             target_total_duration_ms=6000,
             max_tracks=3,
             crossfade_ms=500,
-            fade_in_out_ms=0
+            fade_in_out_ms=0,
         )
 
         assert Path(result_path).exists()
@@ -85,7 +84,4 @@ async def test_generate_smart_preview_multiple_tracks_with_crossfade(temp_audio_
 async def test_generate_smart_preview_empty_input():
     """Should raise ValueError if no input files are provided."""
     with pytest.raises(ValueError, match="At least one input file is required"):
-        await generate_smart_preview(
-            input_files=[],
-            output_path="fail.mp3"
-        )
+        await generate_smart_preview(input_files=[], output_path="fail.mp3")

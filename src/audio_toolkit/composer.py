@@ -15,7 +15,7 @@ def _process_tracks_sync(
     crossfade_ms: int,
     fade_in_out_ms: int,
     export_bitrate: str,
-    output_path: PathLike
+    output_path: PathLike,
 ) -> str:
     """Synchronous core logic for audio processing."""
     tracks_to_use = input_files[:max_tracks]
@@ -31,15 +31,13 @@ def _process_tracks_sync(
         if combined_audio is None:
             combined_audio = best_segment
         else:
-            combined_audio = combined_audio.append(
-                best_segment, crossfade=crossfade_ms)
+            combined_audio = combined_audio.append(best_segment, crossfade=crossfade_ms)
 
     if combined_audio is None:
         raise ValueError("No valid audio tracks were processed.")
 
     # Apply master fade-in and fade-out
-    final_audio = combined_audio.fade_in(
-        fade_in_out_ms).fade_out(fade_in_out_ms)
+    final_audio = combined_audio.fade_in(fade_in_out_ms).fade_out(fade_in_out_ms)
 
     # Export
     out_path = Path(output_path)
@@ -56,12 +54,12 @@ async def generate_smart_preview(
     max_tracks: int = 4,
     crossfade_ms: int = 500,
     fade_in_out_ms: int = 500,
-    export_bitrate: str = "192k"
+    export_bitrate: str = "192k",
 ) -> str:
     """
     Generates a smart audio preview from a list of local audio files.
 
-    This is an async wrapper that runs the CPU-intensive pydub operations 
+    This is an async wrapper that runs the CPU-intensive pydub operations
     in a thread pool to avoid blocking the asyncio event loop.
     """
     if not input_files:
@@ -75,5 +73,5 @@ async def generate_smart_preview(
         crossfade_ms,
         fade_in_out_ms,
         export_bitrate,
-        output_path
+        output_path,
     )
