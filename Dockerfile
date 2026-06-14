@@ -1,34 +1,28 @@
-# Use a lightweight Python 3.11 base image
 FROM python:3.11-slim
 
-# Prevent Python from writing .pyc files and buffer stdout for clean logs
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Install system dependencies:
-# - ffmpeg: REQUIRED by pydub to read, process, and export audio files
-# - git: REQUIRED by pre-commit to manage and run hooks
+# Install ffmpeg (for pydub) and git (for pre-commit)
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        ffmpeg \
-        git && \
+    apt-get install -y --no-install-recommends ffmpeg git && \
     rm -rf /var/lib/apt/lists/*
 
-# Set working directory
+# Set the working directory inside the container
 WORKDIR /workspace
 
-# Copy requirements first to leverage Docker layer caching
+# 🔑 CRITICAL: Copy the dev requirements file (not requirements.txt)
 COPY requirements-dev.txt .
 
-# Install Python dependencies (installs the toolkit in editable mode + dev tools)
+# Install dependencies (this installs the toolkit in editable mode + dev tools)
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements-dev.txt
 
-# Copy the rest of the application code
+# Copy the rest of the repository code
 COPY . .
 
-# Optional: Automatically install the git hooks when the container builds
+# Automatically install git hooks
 RUN pre-commit install || true
 
-# Default command to keep the dev container running
+# Keep the container running for VS Code to attach to
 CMD ["sleep", "infinity"]

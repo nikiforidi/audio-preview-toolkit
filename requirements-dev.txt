@@ -1,5 +1,4 @@
--r requirements.txt
-
+pydub>=0.25.1
 pytest>=8.0.0
 pytest-asyncio>=0.23.0
 ruff>=0.3.0
