@@ -1,6 +1,7 @@
 import asyncio
 from pathlib import Path
 from typing import List, Union
+
 from pydub import AudioSegment
 
 from .analyzer import find_loudest_segment
@@ -24,7 +25,6 @@ def _process_tracks_sync(
     combined_audio: AudioSegment | None = None
 
     for file_path in tracks_to_use:
-        # pydub automatically detects format based on file extension
         audio = AudioSegment.from_file(str(file_path))
         best_segment = find_loudest_segment(audio, duration_per_track_ms)
 
@@ -36,8 +36,12 @@ def _process_tracks_sync(
     if combined_audio is None:
         raise ValueError("No valid audio tracks were processed.")
 
-    # Apply master fade-in and fade-out
-    final_audio = combined_audio.fade_in(fade_in_out_ms).fade_out(fade_in_out_ms)
+    # 🔑 FIX: Only apply fades if the duration is greater than 0.
+    # pydub throws a TypeError if you pass 0 to fade_in() or fade_out().
+    if fade_in_out_ms > 0:
+        final_audio = combined_audio.fade_in(fade_in_out_ms).fade_out(fade_in_out_ms)
+    else:
+        final_audio = combined_audio
 
     # Export
     out_path = Path(output_path)
@@ -58,9 +62,7 @@ async def generate_smart_preview(
 ) -> str:
     """
     Generates a smart audio preview from a list of local audio files.
-
-    This is an async wrapper that runs the CPU-intensive pydub operations
-    in a thread pool to avoid blocking the asyncio event loop.
+    Runs CPU-intensive pydub operations in a thread pool to avoid blocking asyncio.
     """
     if not input_files:
         raise ValueError("At least one input file is required")
